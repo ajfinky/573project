@@ -77,7 +77,7 @@ public class DataManager {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			throw new IllegalStateException(e);
+			throw new IllegalStateException("Error during login attmept.");
 		}
 	}
 
