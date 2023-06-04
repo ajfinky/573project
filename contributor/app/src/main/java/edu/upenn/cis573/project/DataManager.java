@@ -46,7 +46,8 @@ public class DataManager {
                 String creditCardExpiryYear = ((Integer)data.get("creditCardExpiryYear")).toString();
                 String creditCardPostCode = (String)data.get("creditCardPostCode");
 
-                Contributor contributor = new Contributor(id, name, email, creditCardNumber, creditCardCVV, creditCardExpiryYear, creditCardExpiryMonth, creditCardPostCode);
+                Contributor contributor = new Contributor(id, name, email, creditCardNumber,
+                        creditCardCVV, creditCardExpiryMonth, creditCardExpiryYear, creditCardPostCode);
 
                 List<Donation> donationList = new LinkedList<>();
 
