@@ -41,6 +41,18 @@ public class Fund {
 		return donations;
 	}
 	
+	public int totalDonationQuantity() {
+		int sum = 0;
+		for (Donation d: donations) {
+			sum += d.getAmount();
+		}
+		return sum;
+	}
 	
+	public Double percentageOfGoal(int sum) {
+		Double percentage = ( (double) sum / target);
+		return percentage;
+	}
 	
 }
+
