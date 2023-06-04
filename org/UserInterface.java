@@ -44,6 +44,52 @@ public class UserInterface {
 	
 	public void createFund() {
 		
+import java.util.List;
+import java.util.Scanner;
+
+public class UserInterface {
+	
+	
+	private DataManager dataManager;
+	private Organization org;
+	private Scanner in = new Scanner(System.in);
+	
+	public UserInterface(DataManager dataManager, Organization org) {
+		this.dataManager = dataManager;
+		this.org = org;
+	}
+	
+	public void start() {
+				
+		while (true) {
+			System.out.println("\n\n");
+			if (org.getFunds().size() > 0) {
+				System.out.println("There are " + org.getFunds().size() + " funds in this organization:");
+			
+				int count = 1;
+				for (Fund f : org.getFunds()) {
+					
+					System.out.println(count + ": " + f.getName());
+					
+					count++;
+				}
+				System.out.println("Enter the fund number to see more information.");
+			}
+			System.out.println("Enter 0 to create a new fund");
+			int option = in.nextInt();
+			in.nextLine();
+			if (option == 0) {
+				createFund(); 
+			}
+			else {
+				displayFund(option);
+			}
+		}			
+			
+	}
+	
+	public void createFund() {
+		
 		System.out.print("Enter the fund name: ");
 		String name = in.nextLine().trim();
 		
@@ -73,14 +119,25 @@ public class UserInterface {
 		
 		List<Donation> donations = fund.getDonations();
 		System.out.println("Number of donations: " + donations.size());
+		
+		// create variable to store donation percentage
+		
 		for (Donation donation : donations) {
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
-	
 		
+		// Print sum of donations
+		if (fund.getTarget() > 0) {
+			System.out.println("Sum of Donations: $" + fund.totalDonationQuantity() + " (" + fund.percentageOfGoal(fund.totalDonationQuantity()) + 
+					"% of Goal)");
+		} else {
+			System.out.println("Sum of Donations: $" + fund.totalDonationQuantity() + " (Target is not set or valid)");
+		}
+		
+		
+				
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine();
-		
 		
 		
 	}
