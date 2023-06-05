@@ -73,14 +73,25 @@ public class UserInterface {
 		
 		List<Donation> donations = fund.getDonations();
 		System.out.println("Number of donations: " + donations.size());
+		
+		// create variable to store donation percentage
+		
 		for (Donation donation : donations) {
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
-	
 		
+		// Print sum of donations
+		if (fund.getTarget() > 0) {
+			System.out.println("Sum of Donations: $" + fund.totalDonationQuantity() + " (" + fund.percentageOfGoal(fund.totalDonationQuantity()) + 
+					"% of Goal)");
+		} else {
+			System.out.println("Sum of Donations: $" + fund.totalDonationQuantity() + " (Target is not set or valid)");
+		}
+		
+		
+				
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine();
-		
 		
 		
 	}

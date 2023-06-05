@@ -1,6 +1,7 @@
 package edu.upenn.cis573.project;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Donation implements Serializable {
 
@@ -36,5 +37,19 @@ public class Donation implements Serializable {
         return fundName + ": $" + amount + " on " + date;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Donation other = (Donation) obj;
+        return Objects.equals(this.fundName, other.getFundName())
+                && Objects.equals(this.contributorName, other.getContributorName())
+                && Objects.equals(this.amount, other.getAmount())
+                && Objects.equals(this.date, other.getDate());
+    }
 
 }

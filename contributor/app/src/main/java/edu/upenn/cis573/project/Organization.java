@@ -2,6 +2,7 @@ package edu.upenn.cis573.project;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Organization {
 
@@ -29,5 +30,19 @@ public class Organization {
 
     public void setFunds(List<Fund> funds) {
         this.funds = funds;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Organization other = (Organization)obj;
+        return Objects.equals(this.id, other.getId())
+                && Objects.equals(this.name, other.getName())
+                && Objects.equals(this.funds, other.getFunds());
     }
 }
