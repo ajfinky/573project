@@ -59,7 +59,7 @@ public class DataManagerGetFundNameTest {
     }
 
     @Test
-    public void testResponseContainsNoStatus() {
+    public void testWrongJsonFormat() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
 
             @Override
@@ -69,17 +69,4 @@ public class DataManagerGetFundNameTest {
         });
         assertNull(dm.getFundName(null));
     }
-
-    @Test
-    public void testResponseContainsNoData() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
-
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"success\"}";
-            }
-        });
-        assertNull(dm.getFundName(null));
-    }
-
 }

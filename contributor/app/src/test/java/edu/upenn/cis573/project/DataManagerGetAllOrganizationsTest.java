@@ -13,7 +13,7 @@ import java.util.Map;
 public class DataManagerGetAllOrganizationsTest {
 
     @Test
-    public void testUnsuccessfulResponse() {
+    public void testUnsuccessfulStatus() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
 
             @Override
@@ -29,7 +29,7 @@ public class DataManagerGetAllOrganizationsTest {
     }
 
     @Test
-    public void testMissingJsonParameter() {
+    public void testWrongJsonFormat() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
 
             @Override

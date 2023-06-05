@@ -25,7 +25,7 @@ public class DataManagerAttemptLoginTest {
     }
 
     @Test
-    public void testGetUnsuccessfullyStatus() {
+    public void testUnsuccessfulStatus() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
 
             @Override
