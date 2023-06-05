@@ -66,4 +66,32 @@ public class DataManager_createFund_Test {
 		
 		assertNull(f);
 	}
+	
+	// 1.2 TESTING POTENTIAL BUGS 
+	// Relies on ID in JSON, and name, description, and target in Arguments
+	// Should we make sure it all matches up? 
+	@Test
+	public void testMismatchArguments() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+			
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return "{\"status\":\"success\",\"data\":{\"_id\":\"12345\",\"name\":\"new fund\",\"description\":\"this is the new fund\",\"target\":10000,\"org\":\"5678\",\"donations\":[],\"__v\":0}}";
+			}
+		});
+		
+		Fund f = dm.createFund("11111", "arg new fund", "arg this is the new fund", 10001);
+		
+		assertNotNull(f);
+		
+		// Relies on JSON for ID
+		assertEquals("12345", f.getId());
+		assertNotEquals("11111", f.getId());
+		
+		// Relies on arguments for description, name, target
+		assertEquals("arg this is the new fund", f.getDescription());
+		assertEquals("arg new fund", f.getName());
+		assertEquals(10001, f.getTarget());
+	}
 }
