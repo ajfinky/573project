@@ -21,6 +21,14 @@ public class DataManager_getContributorName_Test {
 		
 		assertNotNull(name);
 		assertEquals("Grace", name);
+		
+		// 1.2 POTENTIAL BUG?
+		// Any ID will get the name Grace. 
+		// Should makeRequest return data with both id and name
+		// and then make sure argument id matches with JSON id before returning the name?
+		name = dm.getContributorName("6789");
+		assertNotNull(name);
+		assertEquals("Grace", name);
 	}
 	
 	@Test
