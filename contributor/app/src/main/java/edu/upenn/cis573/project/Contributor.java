@@ -3,6 +3,7 @@ package edu.upenn.cis573.project;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Contributor implements Serializable {
 
@@ -16,7 +17,9 @@ public class Contributor implements Serializable {
     private String creditCardPostCode;
     private List<Donation> donations;
 
-    public Contributor(String id, String name, String email, String creditCardNumber, String creditCardCVV, String creditCardExpiryMonth, String creditCardExpiryYear, String creditCardPostCode) {
+    public Contributor(String id, String name, String email, String creditCardNumber,
+                       String creditCardCVV, String creditCardExpiryMonth, String creditCardExpiryYear,
+                       String creditCardPostCode) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -66,5 +69,25 @@ public class Contributor implements Serializable {
 
     public void setDonations(List<Donation> donations) {
         this.donations = donations;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Contributor other = (Contributor) obj;
+        return Objects.equals(this.id, other.getId())
+                && Objects.equals(this.name, other.getName())
+                && Objects.equals(this.email, other.getEmail())
+                && Objects.equals(this.creditCardNumber, other.getCreditCardNumber())
+                && Objects.equals(this.creditCardCVV, other.getCreditCardCVV())
+                && Objects.equals(this.creditCardExpiryMonth, other.getCreditCardExpiryMonth())
+                && Objects.equals(this.creditCardExpiryYear, other.getCreditCardExpiryYear())
+                && Objects.equals(this.creditCardPostCode, other.getCreditCardPostCode())
+                && Objects.equals(this.donations, other.getDonations());
     }
 }
