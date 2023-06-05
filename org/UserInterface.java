@@ -44,52 +44,6 @@ public class UserInterface {
 	
 	public void createFund() {
 		
-import java.util.List;
-import java.util.Scanner;
-
-public class UserInterface {
-	
-	
-	private DataManager dataManager;
-	private Organization org;
-	private Scanner in = new Scanner(System.in);
-	
-	public UserInterface(DataManager dataManager, Organization org) {
-		this.dataManager = dataManager;
-		this.org = org;
-	}
-	
-	public void start() {
-				
-		while (true) {
-			System.out.println("\n\n");
-			if (org.getFunds().size() > 0) {
-				System.out.println("There are " + org.getFunds().size() + " funds in this organization:");
-			
-				int count = 1;
-				for (Fund f : org.getFunds()) {
-					
-					System.out.println(count + ": " + f.getName());
-					
-					count++;
-				}
-				System.out.println("Enter the fund number to see more information.");
-			}
-			System.out.println("Enter 0 to create a new fund");
-			int option = in.nextInt();
-			in.nextLine();
-			if (option == 0) {
-				createFund(); 
-			}
-			else {
-				displayFund(option);
-			}
-		}			
-			
-	}
-	
-	public void createFund() {
-		
 		System.out.print("Enter the fund name: ");
 		String name = in.nextLine().trim();
 		
