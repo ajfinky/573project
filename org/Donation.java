@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Donation {
 	
 	private String fundId;
@@ -10,22 +12,21 @@ public class Donation {
 		this.contributorName = contributorName;
 		this.amount = amount;
 
-		Map<String, String> month = Map.of(
-				"01", "January",
-				"02", "February",
-				"03", "March",
-				"04", "April",
-				"05", "May",
-				"06", "June",
-				"07", "July",
-				"08", "August",
-				"09", "September",
-				"10", "October",
-				"11", "November",
-				"12", "December"
-		);
+		Map<String, String> month = new HashMap<>();
+		month.put("01", "January");
+		month.put("02", "February");
+		month.put("03", "March");
+		month.put("04", "April");
+		month.put("05", "May");
+		month.put("06", "June");
+		month.put("07", "July");
+		month.put("08", "August");
+		month.put("09", "September");
+		month.put("10", "October");
+		month.put("11", "November");
+		month.put("12", "December");
 
-		this.date = month.get(date.substring(5, 7),) + " " + date.substring(8, 10) + ", " + date.substring(4);
+		this.date = month.get(date.substring(5, 7)) + " " + date.substring(8, 10) + ", " + date.substring(4);
 	}
 
 	public String getFundId() {
