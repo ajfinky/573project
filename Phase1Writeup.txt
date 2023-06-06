@@ -1,0 +1,104 @@
+﻿1. The Additional Tasks that you would like graded for this phase. Please keep in mind that we will only grade three Additional Tasks for a group of three, and four Additional Tasks for a group of four. If you list more than that, the tasks that get graded will be decided at the grader’s discretion. 1.4, 1.5, 1.8, 1.9
+2. For each task you completed in this phase (Required or Additional), a brief description of the changes you made to the provided code, e.g. the names of any classes or methods that were changed, new methods that were created, etc. See below.
+3. A description of any bugs that you found and fixed in Task 1.2 (and also in 1.4 if you chose to do it).
+   1. In DataManager.attemptLogin(), String description = (String)data.get("descrption") was changed to String description = (String)data.get("description").
+4. Any known bugs or other issues with the tasks you attempted in this phase.
+5. Instructions on how to start each app, if you changed anything from the original version of the code, e.g. the name of the Java main class or JavaScript entry point, arguments to the programs, etc. If you did not change anything, you may omit this. N/A
+6. A brief but specific description of each team member’s contributions, including the task numbers that they worked on. Please do not simply write “all members contributed equally to all tasks” since we know that’s not really the case. 
+   1. Grace 1.1 and 1.2
+   2. Aaron 1.3
+   3. Travis 1.4 and 1.5
+   4. John-Wesley 1.8 and 1.9
+
+
+What Changed
+Task 1.1
+* DataManager_createFund_Test.java
+   * Added new test methods for unsuccessful creations to achieve 100% coverage for DataManager.createFund() method.
+* DataManager_attemptLogin_Test.java
+   * Created JUnit file and added test methods to achieve 100% coverage for DataManager.attemptLogin() method.
+* DataManager_getContributorName_Test.java
+   * Created JUnit file and added test methods to achieve 100% coverage for DataManager.getContributorName() method.
+Task 1.2
+* In DataManager.attemptLogin() there was a typo, fixed (String) data.get(“descrption”) to   (String) data.get(“description”)
+
+
+Task 1.3
+* Fund.totalDonationQuantity()
+   * Added a new method to calculate the sum of all donations
+* Fund.percentageOfGoal(int sum)
+   * Added a new method to calculate the percentage the sum of all donations comprises of a given target
+* UserInterface.displayFund()
+   * Edited the method to display both the calculated sum of all donations and its percentage of the target
+
+
+Task 1.4
+* Created DataManagerAttempLoginTest class
+   * A class to test  the attemptLogin() method of the DataManager class
+   * testNullLogin() and testNullPassword() 
+      * Verify that the method returns null when null parameters are passed in
+   * testUnsuccessfullyStatus() 
+      * Verify that the method returns null when the login attempt has an "unsuccessful" status.
+   * testWrongPassword() 
+      * Verify that the method returns null when the username and password don’t match
+   * testSuccessfulLogin() 
+      * Verify that the method returns the expected Contributor object upon successful login
+* Edited DataManger_getFundName_test
+   * Renamed to DataManagerGetFundNameTest
+   * Added new tests
+      * testNullId()
+         * Verify that the method returns null if null parameters are passed in
+      * testUnsuccessfullyStatus() 
+         * Verify that the method returns null when the response has an "unsuccessful" status.
+      * testGetNullResponseFromServer()
+         * Verify that the method returns null if it obtains null response from the server
+      * testWrongJsonFormat()
+         * Verify that the method returns null if the json object is missing keys
+* Created DataManagerGetAllOrganizationsTest class
+   * A class to test  the getAllOrganizations() method of the DataManager class
+   * Added tests
+      * testUnsuccessfullyStatus() 
+         * Verify that the method returns null when the response has an "unsuccessful" status.
+      * testWrongJsonFormat()
+         * Verify that the method returns null if the json object is missing keys
+      * testGetAllOrganizations()
+         * Verify that the method returns the expected Organization object 
+* Created DataManagerGetAllOrganizationsTest class
+   * A class to test  the makeDonation() method of the DataManager class
+   * Added tests
+      * testNullContributorId(), testNullFundId(), testNullAmount()
+         * Verify that the method returns null if null parameters are passed in
+      * testUnsuccessfullyStatus() 
+         * Verify that the method returns null when the response has an "unsuccessful" status.
+      * testSuccessfullyStatus
+         * Verify that the method returns True when the response has an "success" status.
+* Modified Contributor class
+   * Override the equals function
+* Modified Donation class
+   * Override the equals function
+* Modified Fund class
+   * Override the equals function
+* Modified Organization class
+   * Override the equals function
+* Fixed a bug in the attempLogin() function
+   * Flipped the order of creditCardExpiryMonth and creditCardExpiryYear to make them consistent with the constructor
+
+
+Task 1.5
+* Modified ViewDonationsActivity.onResume()
+   * Added a Toast to display the total donations
+
+
+
+
+Task 1.8:
+* Modified DataManager.attemptLogin()
+   * Replaced the return statement in the catch block by throw an IllegalStateException
+* Modified UserInterface.main()
+   * Wrapped existing code in try block
+   * Added a catch block in the case where DataManager.attemptLogin() throws an exception
+
+
+Task 1.9:
+* Modified constructor for Donation
+* Stores the date in an alternate format
