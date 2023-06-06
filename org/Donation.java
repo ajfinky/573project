@@ -26,7 +26,7 @@ public class Donation {
 		month.put("11", "November");
 		month.put("12", "December");
 
-		this.date = month.get(date.substring(5, 7)) + " " + date.substring(8, 10) + ", " + date.substring(4);
+		this.date = month.get(date.substring(5, 7)) + " " + date.substring(8, 10) + ", " + date.substring(0, 4);
 	}
 
 	public String getFundId() {
