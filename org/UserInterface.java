@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -14,14 +16,21 @@ public class UserInterface {
 	}
 	
 	public void start() {
-				
+		
+		// initialize map variable
+		Map<String, String> idMap = new HashMap<String, String>();	
+		
 		while (true) {
 			System.out.println("\n\n");
 			if (org.getFunds().size() > 0) {
 				System.out.println("There are " + org.getFunds().size() + " funds in this organization:");
 			
 				int count = 1;
+				
 				for (Fund f : org.getFunds()) {
+					
+					// create dictionary to map ID to name
+					idMap.put(f.getId(), f.getName());
 					
 					System.out.println(count + ": " + f.getName());
 					
@@ -30,10 +39,56 @@ public class UserInterface {
 				System.out.println("Enter the fund number to see more information.");
 			}
 			System.out.println("Enter 0 to create a new fund");
+			
+			// 2.8 : Add in logout functionality
+			System.out.println("Enter -1 to log out of this account and log into another");
+			
+			// 2.9 : Add in option to display all fund information
+			System.out.println("Enter -2 to display donations for all funds in this organization");
+			
 			int option = in.nextInt();
 			in.nextLine();
 			if (option == 0) {
 				createFund(); 
+				
+			// 2.8 : option to log out
+			} else if (option == -1) {
+				while(true) {
+					System.out.println("Enter new username:");
+					String username = in.next();
+					in.nextLine();
+					
+					System.out.println("Enter new password:");
+					String password = in.next();
+					in.nextLine();
+					
+					DataManager ds = new DataManager(new WebClient("localhost", 3001));
+					
+					try {
+						Organization org = ds.attemptLogin(username, password);
+
+						if (org == null) {
+							System.out.println("Login failed.");
+						}
+						else {
+							UserInterface ui = new UserInterface(ds, org);
+							ui.start();
+						}
+					}
+					catch (Exception e) {
+						System.out.println("Error in communicating with the server.");
+					}
+				}
+			} else if (option == -2) {
+				List<Donation> donationList = org.getAllSortedDonations();
+				
+				if (donationList.size() == 0) {
+					System.out.println("There are no donations for this organization.");
+				}
+				
+				for (Donation d : donationList) {
+					System.out.println("* : $" + d.getAmount() + " on " + d.getDate() + " for " + idMap.get(d.getFundId()));
+				}
 			}
 			else {
 				displayFund(option);
