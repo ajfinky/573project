@@ -1,5 +1,4 @@
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Fund {
 
@@ -8,6 +7,8 @@ public class Fund {
 	private String description;
 	private long target;
 	private List<Donation> donations;
+	private String[] contributorArr;
+	private final Map<String, List<Long>> contributorMap = new HashMap<>();
 	
 	public Fund(String id, String name, String description, long target) {
 		this.id = id;
@@ -35,6 +36,26 @@ public class Fund {
 
 	public void setDonations(List<Donation> donations) {
 		this.donations = donations;
+		Set<String> contributorSet = new HashSet<>();
+		for (Donation d : donations) {
+			String name = d.getContributorName();
+			contributorSet.add(name);
+			if (contributorMap.containsKey(name)) {
+				List<Long> list = contributorMap.get(name);
+				list.set(0, list.get(0) + 1);
+				list.set(1, list.get(1) + d.getAmount());
+			} else {
+				List<Long> list = new ArrayList<>();
+				list.add(1L);
+				list.add(d.getAmount());
+				contributorMap.put(name, list);
+			}
+		}
+		contributorArr = contributorSet.toArray(contributorArr);
+		Arrays.sort(
+				contributorArr,
+				(s, t1) -> Long.compare(contributorMap.get(s).get(1), contributorMap.get(t1).get(1))
+		);
 	}
 	
 	public List<Donation> getDonations() {
@@ -53,6 +74,11 @@ public class Fund {
 		Double percentage = ( (double) sum / target);
 		return percentage;
 	}
+
+	public String[] getSortedContributors() { return contributorArr; }
+
+	public Map<String, List<Long>> getContributorTotals() { return contributorMap; }
+
 	
 }
 

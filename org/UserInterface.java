@@ -9,7 +9,7 @@ public class UserInterface {
 	private DataManager dataManager;
 	private Organization org;
 	private Scanner in = new Scanner(System.in);
-	
+
 	public UserInterface(DataManager dataManager, Organization org) {
 		this.dataManager = dataManager;
 		this.org = org;
@@ -130,10 +130,20 @@ public class UserInterface {
 		System.out.println("Number of donations: " + donations.size());
 		
 		// create variable to store donation percentage
-		
+
+		// print individual contributions
 		for (Donation donation : donations) {
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
+
+		// print aggregate contributions
+		String[] contributorArr = fund.getSortedContributors();
+		Map<String, List<Long>> contributorMap = fund.getContributorTotals();
+		for (String s : contributorArr) {
+			List<Long> stats = contributorMap.get(s);
+			System.out.println(s + ", " + stats.get(0) + " donations, $" + stats.get(1) + " total.");
+		}
+
 		
 		// Print sum of donations
 		if (fund.getTarget() > 0) {
