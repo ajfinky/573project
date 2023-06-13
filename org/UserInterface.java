@@ -132,11 +132,15 @@ public class UserInterface {
 		// create variable to store donation percentage
 
 		// print individual contributions
+		System.out.println("\n\n");
+		System.out.println("Donations:");
 		for (Donation donation : donations) {
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
 
 		// print aggregate contributions
+		System.out.println("\n\n");
+		System.out.println("Aggregated Donations:");
 		String[] contributorArr = fund.getSortedContributors();
 		Map<String, List<Long>> contributorMap = fund.getContributorTotals();
 		for (String s : contributorArr) {
