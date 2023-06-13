@@ -21,6 +21,7 @@ public class DataManager_getContributorName_Test {
 		
 		assertNotNull(name);
 		assertEquals("Grace", name);
+		
 	}
 	
 	@Test
@@ -35,12 +36,11 @@ public class DataManager_getContributorName_Test {
 		});
 		
 		String name = dm.getContributorName("12345");
-		
 		assertNull(name);
 	}
 	
-	@Test
-	public void testException() {
+	@Test(expected=IllegalStateException.class)
+	public void testStatusMisspelled() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
 			
@@ -50,8 +50,21 @@ public class DataManager_getContributorName_Test {
 			}
 		});
 		
-		String name = dm.getContributorName("12345");
-		
-		assertNull(name);
+		dm.getContributorName("12345");
 	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testMissingName() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+			
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return "{\"statu\":\"success\"}"; 
+			}
+		});
+		
+		dm.getContributorName("12345");
+	}
+	
 }
