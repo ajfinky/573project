@@ -9,14 +9,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class DataManager {
+public class DataManager { 
 
 	private final WebClient client;
-
+	
 	private final Map<String, String> names = new HashMap<>();
 
 	public DataManager(WebClient client) {
-		this.client = client;
+		this.client = client; 
 	}
 
 	/**
@@ -25,24 +25,32 @@ public class DataManager {
 	 * @return an Organization object if successful; null if unsuccessful
 	 */
 	public Organization attemptLogin(String login, String password) {
+		
+		if (login == null || password == null) {
+			throw new IllegalArgumentException("Argument is null.");
+		}
 
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("login", login);
 			map.put("password", password);
 			String response = client.makeRequest("/findOrgByLoginAndPassword", map);
-
+			
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error");
+			}
 
 
 			if (status.equals("success")) {
 				JSONObject data = (JSONObject)json.get("data");
 				String fundId = (String)data.get("_id");
 				String name = (String)data.get("name");
-				String description = (String)data.get("description"); //1.2 BUG FIX
-				Organization org = new Organization(fundId, name, description);
+				String description = (String)data.get("description"); 
+				Organization org = new Organization(fundId, name, description);  
 
 				JSONArray funds = (JSONArray)data.get("funds");
 				Iterator it = funds.iterator();
@@ -62,15 +70,21 @@ public class DataManager {
 						JSONObject donation = (JSONObject) it2.next();
 						String contributorId = (String)donation.get("contributor");
 						String contributorName;
+						
 						if (names.containsKey(contributorId)) {
 							contributorName = names.get(contributorId);
 						} else {
-							contributorName = this.getContributorName(contributorId);
+							try {
+								contributorName = this.getContributorName(contributorId);
+							} catch (Exception e) {
+								contributorName = null;
+							}
 							names.put(contributorId, contributorName);
 						}
+						
 						long amount = (Long)donation.get("amount");
 						String date = (String)donation.get("date");
-						donationList.add(new Donation(fundId, contributorName, amount, date));
+						donationList.add(new Donation(fundId, contributorName, amount, date)); 
 					}
 
 					newFund.setDonations(donationList);
@@ -84,7 +98,7 @@ public class DataManager {
 			else return null;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new IllegalStateException("Error during login attmept.");
 		}
 	}
@@ -95,6 +109,14 @@ public class DataManager {
 	 * @return the name of the contributor on success; null if no contributor is found
 	 */
 	public String getContributorName(String id) {
+		
+		if (this.client == null) {
+			throw new IllegalStateException("WebClient is null.");
+		}
+		
+		if (id == null) {
+			throw new IllegalArgumentException("Illegal arguments passed.");
+		}
 
 		try {
 
@@ -110,12 +132,17 @@ public class DataManager {
 				String name = (String)json.get("data");
 				return name;
 			}
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error"); 
+			}
+			
 			else return null;
 
 
 		}
 		catch (Exception e) {
-			return null;
+				throw new IllegalStateException("Web client returns error"); 
 		}	
 	}
 
@@ -124,6 +151,14 @@ public class DataManager {
 	 * @return a new Fund object if successful; null if unsuccessful
 	 */
 	public Fund createFund(String orgId, String name, String description, long target) {
+		
+		if (this.client == null) {
+			throw new IllegalStateException("WebClient is null.");
+		}
+		
+		if (orgId == null || name == null || description == null) {
+			throw new IllegalArgumentException("Illegal arguments passed.");
+		}
 
 		try {
 
@@ -143,12 +178,17 @@ public class DataManager {
 				String fundId = (String)fund.get("_id");
 				return new Fund(fundId, name, description, target);
 			}
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error"); 
+			}
+			
 			else return null;
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			//e.printStackTrace(); 
+			throw new IllegalStateException("Web client returns error"); 
 		}	
 	}
 
