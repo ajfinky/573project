@@ -1,5 +1,6 @@
 package edu.upenn.cis573.project;
 
+import org.json.JSONException;
 import org.junit.Test;
 
 import java.util.Map;
@@ -10,10 +11,17 @@ import static org.junit.Assert.assertNull;
 
 public class DataManagerGetFundNameTest {
 
+    @Test(expected = IllegalStateException.class)
+    public void testNullWebClient()  {
+        DataManager dm = new DataManager(null);
+        dm.getFundName("123");
+    }
+
+
     @Test
     public void testSuccess() {
 
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
@@ -26,47 +34,61 @@ public class DataManagerGetFundNameTest {
         assertEquals("Snoopy", name);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testNullId() {
-        DataManager dm = new DataManager(new WebClient(null, 0));
-        assertNull(dm.getFundName(null));
+        DataManager dm = new DataManager(new WebClient("10", 3000));
+        dm.getFundName(null);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testUnsuccessfulStatus() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"unsuccessful\",\"data\":\"Snoopy\"}";
+                return "{\"status\":\"error\",\"data\":\"Snoopy\"}";
             }
         });
-        String name = dm.getFundName("12345");
-        assertNotNull(name);
-        assertEquals("Unknown Fund", name);
+        dm.getFundName("12345");
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testGetNullResponseFromServer() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 return null;
             }
         });
-        assertNull(dm.getFundName(null));
+        dm.getFundName("12345");
     }
 
-    @Test
-    public void testWrongJsonFormat() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+    @Test(expected = IllegalStateException.class)
+    public void testMalformedJson() {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"data\":\"Snoopy\"}";
+                return "{\"status\":\"success\",\"data1\":\"Snoopy\"}";
             }
         });
-        assertNull(dm.getFundName(null));
+        dm.getFundName("12345");
+    }
+
+    @Test
+    public void testCache() {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
+
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"success\",\"data\":\"Snoopy\"}";
+            }
+        });
+
+        String name = dm.getFundName("12345");
+        assertNotNull(name);
+        assertEquals("Snoopy", name);
+        assertEquals("Snoopy", dm.getFundName("12345"));
     }
 }

@@ -2,7 +2,6 @@ package edu.upenn.cis573.project;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -12,44 +11,66 @@ import java.util.Map;
 
 public class DataManagerAttemptLoginTest {
 
-    @Test
+    @Test(expected = IllegalStateException.class)
+    public void testNullWebClient() {
+        DataManager dm = new DataManager(null);
+        dm.attemptLogin("123", "123");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void testNullLogin() {
-        DataManager dm = new DataManager(new WebClient(null, 0));
-        assertNull(dm.attemptLogin(null, "12345"));
+        DataManager dm = new DataManager(new WebClient("10", 3000));
+        dm.attemptLogin(null, "12345");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testNullPassword() {
-        DataManager dm = new DataManager(new WebClient(null, 0));
-        assertNull(dm.attemptLogin("12345", null));
+        DataManager dm = new DataManager(new WebClient("10", 3000));
+        dm.attemptLogin("12345", null);
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testUnsuccessfulStatus() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 String id = "123";
                 String name = "Snoopy";
 
-                return "{\"status\": \"unsuccessful\", " +
+                return "{\"status\": \"error\", " +
                         "\"data\": {\"_id\": \"" + id + "\", \"name\": \"" + name + "\"}}";
             }
         });
-        assertNull(dm.attemptLogin("1234", "1234"));
+        dm.attemptLogin("1234", "1234");
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testWrongLoginPassword() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 return null;
             }
         });
-        assertNull(dm.attemptLogin("1234", "1234"));
+        dm.attemptLogin("1234", "1234");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testMalformedJson() {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
+
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                String id = "123";
+                String name = "Snoopy";
+
+                return "{\"status\": \"success\", " +
+                        "\"data\": {\"_id\": \"" + id + "\", \"name\": \"" + name + "\"}}";
+            }
+        });
+        dm.attemptLogin("1234", "1234");
     }
 
     @Test
@@ -66,7 +87,7 @@ public class DataManagerAttemptLoginTest {
                 "{\"fund\": \"2\", \"date\": \"02/03/12\", \"amount\": 20}," +
                 "{\"fund\": \"3\", \"date\": \"03/04/12\", \"amount\": 15}]";
 
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 return "{\"status\": \"success\", " +

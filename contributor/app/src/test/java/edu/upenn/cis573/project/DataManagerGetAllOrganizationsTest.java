@@ -12,9 +12,15 @@ import java.util.Map;
 
 public class DataManagerGetAllOrganizationsTest {
 
-    @Test
+    @Test(expected = IllegalStateException.class)
+    public void testNullWebClient() {
+        DataManager dm = new DataManager(null);
+        dm.getAllOrganizations();
+    }
+
+    @Test(expected = IllegalStateException.class)
     public void testUnsuccessfulStatus() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+        DataManager dm = new DataManager(new WebClient("10", 3000) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
@@ -25,22 +31,22 @@ public class DataManagerGetAllOrganizationsTest {
                         "\"data\": {\"_id\": \"" + id + "\", \"name\": \"" + name + "\"}}";
             }
         });
-        assertNull(dm.getAllOrganizations());
+        dm.getAllOrganizations();
     }
 
-    @Test
-    public void testWrongJsonFormat() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
+    @Test(expected = IllegalStateException.class)
+    public void testMalformedJson() {
+        DataManager dm = new DataManager(new WebClient("10", 300) {
 
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 String id = "123";
 
                 return "{\"status\": \"success\", " +
-                        "\"data\": {\"_id\": \"" + id + "\"}}";
+                        "\"data1\": {\"_id\": \"" + id + "\"}}";
             }
         });
-        assertNull(dm.getAllOrganizations());
+        dm.getAllOrganizations();
     }
 
     @Test
