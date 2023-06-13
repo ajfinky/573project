@@ -13,6 +13,8 @@ public class DataManager {
 
 	private final WebClient client;
 
+	private Map<String, String> names = new HashMap<>();
+
 	public DataManager(WebClient client) {
 		this.client = client;
 	}
@@ -59,7 +61,13 @@ public class DataManager {
 					while(it2.hasNext()){
 						JSONObject donation = (JSONObject) it2.next();
 						String contributorId = (String)donation.get("contributor");
-						String contributorName = this.getContributorName(contributorId);
+						String contributorName;
+						if (names.containsKey(contributorId)) {
+							contributorName = names.get(contributorId);
+						} else {
+							contributorName = this.getContributorName(contributorId);
+							names.put(contributorId, contributorName);
+						}
 						long amount = (Long)donation.get("amount");
 						String date = (String)donation.get("date");
 						donationList.add(new Donation(fundId, contributorName, amount, date));
