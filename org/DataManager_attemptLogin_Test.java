@@ -22,7 +22,7 @@ public class DataManager_attemptLogin_Test {
 		
 	}
 	
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalLogin() {
 		
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -36,7 +36,7 @@ public class DataManager_attemptLogin_Test {
 		dm.attemptLogin(null, "password");
 	}
 	
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalPassword() {
 		
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
