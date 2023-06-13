@@ -13,7 +13,7 @@ public class DataManager {
 
 	private final WebClient client;
 
-	private Map<String, String> names = new HashMap<>();
+	private final Map<String, String> names = new HashMap<>();
 
 	public DataManager(WebClient client) {
 		this.client = client;
