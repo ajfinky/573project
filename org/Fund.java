@@ -54,7 +54,7 @@ public class Fund {
 		contributorArr = contributorSet.toArray(contributorArr);
 		Arrays.sort(
 				contributorArr,
-				(s, t1) -> Long.compare(contributorMap.get(s).get(1), contributorMap.get(t1).get(1))
+				(s, t1) -> Long.compare(contributorMap.get(t1).get(1), contributorMap.get(s).get(1))
 		);
 	}
 	
