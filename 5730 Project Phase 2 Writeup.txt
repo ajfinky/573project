@@ -1,0 +1,98 @@
+The Additional Tasks that you would like graded for this phase. Please keep in mind that we will only grade three Additional Tasks for a group of three, and four Additional Tasks for a group of four. If you list more than that, the tasks that get graded will be decided at the grader’s discretion.
+2.4, 2.5, 2.7, 2.8
+
+For each task you completed in this phase (Required or Additional), a brief description of the changes you made to the provided code, e.g. the names of any classes or methods that were changed, new methods that were created, etc.
+See below.
+
+Any known bugs or other issues with the tasks you attempted in this phase.
+
+
+Instructions on how to start each app, if you changed anything from the original version of the code, e.g. the name of the Java main class or JavaScript entry point, arguments to the programs, etc. If you did not change anything, you may omit this.
+
+
+A brief but specific description of each team member’s contributions, including the task numbers that they worked on.
+Grace: 2.2
+Aaron: 2.8 and 2.9
+Travis: 2.4 and 2.5
+John-Wesley: 2.1 and 2.3
+
+What Changed:
+
+Task 2.1:
+DataManager.java
+Added a private final field called names to map a contributorId to a contributorName.
+DataManager.attemptLogin()
+Added code to check if there exists a mapping from contributorId to contributorName. If yes, we get the contributorName from the cache. If not, we call DataManager.getContributorName() and store the result in the cache.
+
+Task 2.2
+DataManager.java
+Added defensive programming in all three methods to make sure all tests in DataManagerRobustnessTest.java pass. 
+DataManager_attemptLogin_Test.java
+Updated the test file to make sure all tests pass with new defensive programming updates.
+DataManager_createFund_Test.java
+Updated the test file to make sure all tests pass with new defensive programming updates.
+DataManager_getContributorName_Test.java
+Updated the test file to make sure all tests pass with new defensive programming updates.
+UserInterface.java
+Already catches expectations in DataManager from other tasks.
+
+Task 2.3:
+Fund.java
+Added a private field called contributorArr which contains the contributor names, sorted in reverse order by their total donation amounts.
+Added a private final field called contributorMap which contains a mapping of a contributor name to their number of donations and total donation amount.
+Fund.setDonation()
+Added code so that when new donations are set, contributorArr and contributorMap are updated.
+Added getter method for contributorArr.
+Added getter method for contributorMap.
+UserInterface.displayFund()
+Added code to get aggregated information using the methods implemented in Fund.java.
+Printed donation results.
+
+Task 2.4:
+DataManger Class
+Added a private variable called cacheFundName to store the fundId to its name.
+DataMangaer.attempLogin() 
+Added the code to try to get the fund name from the cache first. If it is not in cache, then call the getFundName() function, and store the fund id and fund name  to cache.
+DataManager.getFundName()
+Added the code to try to get the fund name from cache first. If it is not in cache, then make a request, and store the fund id and fund name to the cache.
+
+Task 2.5:
+DataMangaer.attempLogin() 
+Throw illegal state exception when the webclient is null
+Throw illegal argument exception when password or login is null before try catch block
+In the try block, throw illegal statement exception when the status is not “success”
+Added one more catch to catch the JSONException to deal with the malformed json
+DataManager.getFundName()
+Throw illegal state exception when the webclient is null
+Throw illegal argument exception when id is null before try catch block
+In the try block, throw illegal statement exception when the status is not “success”
+Added one more catch to catch the JSONException to deal with the malformed json
+DataManager.getAllOrganizations()
+Throw illegal state exception when the webclient is null
+In the try block, throw illegal statement exception when the status is not “success”
+Added one more catch to catch the JSONException to deal with the malformed json
+DataManger.makeDonation()
+Throw illegal state exception when the webclient is null
+Throw illegal argument exception when contributorId, fundId, or amount is null before try catch block
+In the try block, try to convert the amount to double
+In the try block, throw illegal statement exception when the status is not “success”
+Added one more catch to catch the NumberFormatException to deal with non-numeric amount
+Added one more catch to catch the JSONException to deal with the malformed json
+	
+Task 2.8:
+UserInterface.start()
+Added functionality to log out of the given account given in the program’s arguments and log into a new account based on user input
+Added print statement to prompt user to log out and log back in
+Created a new Data Manager object based on this new input 
+Added in a try…catch block in case of an exception
+
+Task 2.9:
+UserInterface.start()
+Added a new HashMap object to map fund ID’s to fund names when given a specific donation
+When iterating through the funds initially, entered the information for each fund in the mpa
+Added print statement to prompt user to enter specific input if that user wishes to view all donations for a given organization 
+Added functionality to access sorted donations and print out their information
+Organziation.getAllSortedDonations()
+Added an entirely new method to access all donations in an organization, sort them from most recent to oldest date added and return the sorted list
+Used Comparator objects and SimpleDateFormat for the comparison
+Added in a try…catch block  in case of a parsing exception
