@@ -71,7 +71,7 @@ public class Fund {
 	}
 	
 	public Double percentageOfGoal(int sum) {
-		Double percentage = ( (double) sum / target);
+		Double percentage = ( (double) sum / target * 100);
 		return percentage;
 	}
 
