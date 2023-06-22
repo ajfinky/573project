@@ -13,7 +13,7 @@ public class DataManager_getContributorName_Test {
 			
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
-				return "{\"status\":\"success\",\"data\":\"Grace\"}"; 
+				return "{\"status\":\"success\",\"name\":\"Grace\"}";
 			}
 		});
 		
