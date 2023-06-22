@@ -99,19 +99,27 @@ public class UserInterface {
 	
 	public void createFund() {
 		
-		System.out.print("Enter the fund name: ");
-		String name = in.nextLine().trim();
-		
-		System.out.print("Enter the fund description: ");
-		String description = in.nextLine().trim();
-		
-		System.out.print("Enter the fund target: ");
-		long target = in.nextInt();
-		in.nextLine();
-
-		Fund fund = dataManager.createFund(org.getId(), name, description, target);
-		org.getFunds().add(fund);
-
+		while(true) {
+			System.out.print("Enter the fund name: ");
+			String name = in.nextLine().trim();
+			
+			System.out.print("Enter the fund description: ");
+			String description = in.nextLine().trim();
+			
+			System.out.print("Enter the fund target: ");
+			
+			try {
+				long target = in.nextInt();
+				in.nextLine();
+				Fund fund = dataManager.createFund(org.getId(), name, description, target);
+				org.getFunds().add(fund);
+				break;
+			} catch (Exception e) {
+				System.out.println("Error. Please enter values again.");
+				in.nextLine();
+			}
+			
+		}
 		
 	}
 	
