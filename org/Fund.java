@@ -7,7 +7,7 @@ public class Fund {
 	private String description;
 	private long target;
 	private List<Donation> donations;
-	private String[] contributorArr;
+	private String[] contributorArr = new String[0];
 	private final Map<String, List<Long>> contributorMap = new HashMap<>();
 	
 	public Fund(String id, String name, String description, long target) {
