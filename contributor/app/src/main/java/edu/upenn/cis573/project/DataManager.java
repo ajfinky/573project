@@ -232,13 +232,10 @@ public class DataManager {
             }
 
             return true;
-
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Amount must be numeric");
         } catch (JSONException e) {
             throw new IllegalStateException("WebClient returned malformed JSON");
-        } catch (Exception e) {
-            throw new IllegalStateException("An unexpected error occurred during making a donation");
         }
     }
 
