@@ -69,19 +69,7 @@ public class DataManager {
 					while(it2.hasNext()){
 						JSONObject donation = (JSONObject) it2.next();
 						String contributorId = (String)donation.get("contributor");
-						String contributorName;
-						
-						if (names.containsKey(contributorId)) {
-							contributorName = names.get(contributorId);
-						} else {
-							try {
-								contributorName = this.getContributorName(contributorId);
-							} catch (Exception e) {
-								contributorName = null;
-							}
-							names.put(contributorId, contributorName);
-						}
-						
+						String contributorName = getContributorName(contributorId);
 						long amount = (Long)donation.get("amount");
 						String date = (String)donation.get("date");
 						donationList.add(new Donation(fundId, contributorName, amount, date)); 
@@ -99,7 +87,7 @@ public class DataManager {
 		}
 		catch (Exception e) {
 			//e.printStackTrace();
-			throw new IllegalStateException("Error during login attmept.");
+			throw new IllegalStateException("Error during login attempt.");
 		}
 	}
 
@@ -118,8 +106,11 @@ public class DataManager {
 			throw new IllegalArgumentException("Illegal arguments passed.");
 		}
 
-		try {
+		if (names.containsKey(id)) {
+			return names.get(id);
+		}
 
+		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", id);
 			String response = client.makeRequest("/findContributorNameById", map);
@@ -129,12 +120,13 @@ public class DataManager {
 			String status = (String)json.get("status");
 
 			if (status.equals("success")) {
-				String name = (String)json.get("data");
+				String name = (String)json.get("name");
+				names.put(id, name);
 				return name;
 			}
 			
 			if (status.equals("error")) {
-				throw new IllegalStateException("Web client returns error"); 
+				throw new IllegalStateException("Web client returns error");
 			}
 			
 			else return null;
