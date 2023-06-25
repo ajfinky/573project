@@ -152,6 +152,9 @@ public class MakeDonationActivity extends AppCompatActivity {
                 finish();
             });
 
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Amount cannot be empty and must be a numeric number",
+                    Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "Sorry, something went wrong!", Toast.LENGTH_LONG).show();
         }

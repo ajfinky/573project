@@ -18,6 +18,25 @@ public class DataManager {
         this.client = client;
     }
 
+    private void validateClientAndInputFields(WebClient client, String... fields) {
+        if (client == null) {
+            throw new IllegalStateException("WebClient should not be null");
+        }
+
+        if (isNullOrEmpty(fields)) {
+            throw new IllegalArgumentException("Fields should not be null or empty");
+        }
+    }
+
+    private static boolean isNullOrEmpty(String... values) {
+        for (String value : values) {
+            if (value == null || value.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Attempt to log in to the Contributor account using the specified login and password.
@@ -25,13 +44,7 @@ public class DataManager {
      * @return the Contributor object if successfully logged in, null otherwise
      */
     public Contributor attemptLogin(String login, String password) {
-        if (client == null) {
-            throw new IllegalStateException("WebClient should not be null");
-        }
-
-        if (login == null || password == null) {
-            throw new IllegalArgumentException("Login/Password should not be null");
-        }
+        validateClientAndInputFields(client, login, password);
 
         try {
             Map<String, Object> map = new HashMap<>();
@@ -52,8 +65,8 @@ public class DataManager {
             String email = (String)data.get("email");
             String creditCardNumber = (String)data.get("creditCardNumber");
             String creditCardCVV = (String)data.get("creditCardCVV");
-            String creditCardExpiryMonth = ((Integer)data.get("creditCardExpiryMonth")).toString();
-            String creditCardExpiryYear = ((Integer)data.get("creditCardExpiryYear")).toString();
+            String creditCardExpiryMonth = data.get("creditCardExpiryMonth").toString();
+            String creditCardExpiryYear = data.get("creditCardExpiryYear").toString();
             String creditCardPostCode = (String)data.get("creditCardPostCode");
 
             Contributor contributor = new Contributor(id, name, email, creditCardNumber,
@@ -75,12 +88,16 @@ public class DataManager {
                     cacheFundName.put(fundId, fund);
                 }
 
-                String date = (String)jsonDonation.get("date");
-                long amount = (Integer)jsonDonation.get("amount");
+                String date = (String) jsonDonation.get("date");
+                Object donationAmount = jsonDonation.get("amount");
+                // prevent it amount being null
+                if (donationAmount.toString().equals("null")) {
+                    donationAmount = "0";
+                }
+                long amount = (Integer.parseInt(donationAmount.toString()));
 
                 Donation donation = new Donation(fund, name, amount, date);
                 donationList.add(donation);
-
             }
 
             contributor.setDonations(donationList);
@@ -95,17 +112,70 @@ public class DataManager {
     }
 
     /**
+     * Attempt to sign up a new Contributor account.
+     * This method uses the /contributorSignUp endpoint in the API
+     * @return the Contributor object if successfully sign up, null otherwise
+     */
+    public Contributor attemptSignUp(String name, String login, String password, String email,
+                                     String creditCardNumber, String creditCardCVV, String creditCardExpiryMonth,
+                                     String creditCardExpiryYear, String creditCardPostCode) {
+        validateClientAndInputFields(client, name, login, password, email, creditCardNumber, creditCardCVV,
+                creditCardExpiryMonth, creditCardExpiryYear, creditCardPostCode);
+
+        try {
+            if (isContributorLoginExist(login)) {
+                throw new IllegalArgumentException("Login name has already existed");
+            }
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("login", login);
+            map.put("password", password);
+            map.put("name", name);
+            map.put("email", email);
+            map.put("card_number", creditCardNumber);
+            map.put("card_cvv", creditCardCVV);
+            map.put("card_month", creditCardExpiryMonth);
+            map.put("card_year", creditCardExpiryYear);
+            map.put("card_postcode", creditCardPostCode);
+
+            String response = client.makeRequest("/createContributor", map);
+
+            JSONObject jsonResponse = new JSONObject(response);
+            String status = jsonResponse.getString("status");
+
+            if (!status.equals("success")) {
+                throw new IllegalStateException("Failed to create contributor");
+            }
+
+            return attemptLogin(login, password);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Login name already exists");
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+
+    }
+
+    private boolean isContributorLoginExist(String login) throws JSONException {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("login", login);
+        String response = client.makeRequest("/findContributorByName", map);
+        JSONObject jsonResponse = new JSONObject(response);
+        String status = jsonResponse.getString("status");
+
+        if (!status.equals("not found")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Get the name of the fund with the specified ID using the /findFundNameById endpoint
      * @return the name of the fund if found, "Unknown fund" if not found, null if an error occurs
      */
     public String getFundName(String id) {
-        if (client == null) {
-            throw new IllegalStateException("WebClient should not be null");
-        }
-
-        if (id == null) {
-            throw new IllegalArgumentException("Id should not be null");
-        }
+        validateClientAndInputFields(client, id);
 
         if (cacheFundName.containsKey(id)) {
             return cacheFundName.get(id);
@@ -207,13 +277,7 @@ public class DataManager {
      * @return true if successful, false otherwise
      */
     public boolean makeDonation(String contributorId, String fundId, String amount) {
-        if (client == null) {
-            throw new IllegalStateException("WebClient should not be null");
-        }
-
-        if (contributorId == null || fundId == null || amount == null) {
-            throw new IllegalArgumentException("ContributorId/FundId/Amount should not be null");
-        }
+        validateClientAndInputFields(client, contributorId, fundId, amount);
 
         try {
             Double.parseDouble(amount); // Check if amount is numeric
@@ -234,8 +298,8 @@ public class DataManager {
             return true;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Amount must be numeric");
-        } catch (JSONException e) {
-            throw new IllegalStateException("WebClient returned malformed JSON");
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
         }
     }
 

@@ -302,6 +302,68 @@ app.use('/findFundNameById', (req, res) => {
 	    });
     });
 
+app.use('/findContributorByName', (req, res) => {
+
+	var query = { "login" : req.query.login };
+
+	Contributor.findOne(query, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data' : err});
+		}
+		else if (!result) {
+		    res.json({'status': 'not found'});
+		}
+		else {
+		    res.json({'status': 'success', 'data': result.name});
+		}
+
+	    });
+    });
+
+app.use('/allContributors', (req, res) => {
+	Contributor.find({}, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data' : err});
+		}
+		else {
+		    //console.log(result);
+		    res.json({'status' : 'success', 'data': result});
+		}
+	    }).sort({ 'name': 'asc' });
+    });
+
+
+/*
+Handle the form submission to create a new contributor
+*/
+app.use('/createContributor', (req, res) => {
+
+	var contributor = new Contributor({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		email: req.query.email,
+		creditCardNumber: req.query.card_number,
+		creditCardCVV: req.query.card_cvv,
+		creditCardExpiryMonth: req.query.card_month,
+		creditCardExpiryYear: req.query.card_year,
+		creditCardPostCode: req.query.card_postcode,
+		donations: []
+	    });
+
+	contributor.save( (err) => {
+		if (err) {
+		    res.json({'status': 'error', 'data' : err});
+		}
+		else {
+		    // console.log(contributor);
+		    res.json({'status' : 'success'});
+		}
+	    });
+
+    });
+
+
 
 
 /*

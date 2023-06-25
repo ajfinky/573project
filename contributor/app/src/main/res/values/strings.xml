@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Donation Contributor Something Something</string>
+    <string name="welcome">Welcome</string>
+    <string name="name">Name</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="login">Login</string>
+    <string name="enter_your_login">Enter your login</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="email">Email</string>
+    <string name="enter_email">Enter Email</string>
 </resources>
