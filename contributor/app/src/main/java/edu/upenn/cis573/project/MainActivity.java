@@ -28,21 +28,20 @@ public class MainActivity extends AppCompatActivity {
         EditText passwordField = findViewById(R.id.passwordField);
         String password = passwordField.getText().toString();
 
-
-        contributor = dataManager.attemptLogin(login, password);
-
-        if (contributor == null) {
-
-            Toast.makeText(this, "Login failed!", Toast.LENGTH_LONG).show();
-
-
-        } else {
-
+        try {
+            contributor = dataManager.attemptLogin(login, password);
             Intent i = new Intent(this, MenuActivity.class);
 
             startActivity(i);
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Login failed!", Toast.LENGTH_LONG).show();
         }
+    }
 
-
+    public void onSignUpButtonClick(View view) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 }

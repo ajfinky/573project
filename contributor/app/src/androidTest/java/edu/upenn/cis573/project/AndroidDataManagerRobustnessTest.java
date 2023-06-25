@@ -1,10 +1,10 @@
 package edu.upenn.cis573.project;
 
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import java.util.Map;
-
-import static org.junit.Assert.fail;
 
 public class AndroidDataManagerRobustnessTest {
 
@@ -28,7 +28,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.attemptLogin(null, "password");
-        fail("DataManager.attemptLogin does not throw IllegalArgumentxception when login is null");
+        fail("DataManager.attemptLogin does not throw IllegalArgumentException when login is null");
 
     }
 
@@ -37,7 +37,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.attemptLogin("login", null);
-        fail("DataManager.attemptLogin does not throw IllegalArgumentxception when password is null");
+        fail("DataManager.attemptLogin does not throw IllegalArgumentException when password is null");
 
     }
 
@@ -113,7 +113,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.getFundName(null);
-        fail("DataManager.getFundName does not throw IllegalArgumentxception when id is null");
+        fail("DataManager.getFundName does not throw IllegalArgumentException when id is null");
 
     }
 
@@ -261,7 +261,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.makeDonation(null, "fundId", "100");
-        fail("DataManager.getMakeDonation does not throw IllegalArgumentxception when contributorId is null");
+        fail("DataManager.getMakeDonation does not throw IllegalArgumentException when contributorId is null");
 
     }
 
@@ -270,7 +270,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.makeDonation("contributorId", null, "100");
-        fail("DataManager.getMakeDonation does not throw IllegalArgumentxception when fundId is null");
+        fail("DataManager.getMakeDonation does not throw IllegalArgumentException when fundId is null");
 
     }
 
@@ -279,7 +279,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.makeDonation("contributorId", "fundId", null);
-        fail("DataManager.getMakeDonation does not throw IllegalArgumentxception when amount is null");
+        fail("DataManager.getMakeDonation does not throw IllegalArgumentException when amount is null");
 
     }
 
@@ -288,7 +288,7 @@ public class AndroidDataManagerRobustnessTest {
 
         dm = new DataManager(new WebClient("10.0.2.2", 3001));
         dm.makeDonation("contributorId", "fundId", "amount");
-        fail("DataManager.getMakeDonation does not throw IllegalArgumentxception when amount is non-numeric");
+        fail("DataManager.getMakeDonation does not throw IllegalArgumentException when amount is non-numeric");
 
     }
 
