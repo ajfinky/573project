@@ -8,6 +8,53 @@ const {Donation} = require('./DbConfig.js');
 
 
 /*
+3.2 - Handle updating an org's password
+*/
+app.use('/updateOrgPassword', (req, res) => {
+
+	var filter = {"_id" : req.query.orgId };
+
+	var update = { "password" : req.query.password };
+	
+	var action = { "$set" : update };
+
+	Organization.findOneAndUpdate( filter, action, { new : true }, (err, result) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else {
+		    //console.log(result);
+		    res.json({ "status" : "success", "data" : result});
+		}
+	    });
+	
+    });
+    
+/*
+3.3 - Handle updating an org's name and description
+*/
+app.use('/updateOrg', (req, res) => {
+
+	var filter = {"_id" : req.query.orgId };
+
+	var update = { "name" : req.query.name, "description" : req.query.description };
+	
+	var action = { "$set" : update };
+
+	Organization.findOneAndUpdate( filter, action, { new : true }, (err, result) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else {
+		    //console.log(result);
+		    res.json({ "status" : "success", "data" : result});
+		}
+	    });
+	
+    });
+
+
+/*
 Return an org with login specified as req.query.login and password specified as 
 req.query.password; this essentially acts as login for organizations
 */
