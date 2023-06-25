@@ -257,5 +257,56 @@ public class DataManager {
 		
 	}
 
+	/**
+	 * Make a donation to the specified fund for the specified amount.
+	 * This method uses the /makeDonation endpoint in the API
+	 * @return true if successful, false otherwise
+	 */
+	public boolean makeDonation(String contributorId, String fundId, String amount) {
+		if (client == null) {
+			throw new IllegalStateException("WebClient should not be null");
+		}
+
+		if (contributorId == null || fundId == null || amount == null) {
+			throw new IllegalArgumentException("ContributorId/FundId/Amount should not be null");
+		}
+
+		if (contributorId.length() == 0 || fundId.length() == 0 || amount.length() == 0) {
+			throw new IllegalArgumentException("ContributorId/FundId/Amount should not be empty");
+		}
+
+		if (getContributorName(contributorId) == null) {
+			throw new IllegalArgumentException("ContributorId is invalid.");
+		}
+
+		try {
+			double a = Double.parseDouble(amount);
+			if (a < 0.0) throw new NumberFormatException();
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("contributor", contributorId);
+			map.put("fund", fundId);
+			map.put("amount", amount);
+			String response = client.makeRequest("/makeDonation", map);
+
+
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String) json.get("status");
+
+			if (!status.equals("success")) {
+				throw new IllegalStateException();
+			}
+
+			return true;
+
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("Amount must be numeric and non-negative");
+		} catch (Exception e) {
+			throw new IllegalStateException("An unexpected error occurred during making a donation");
+		}
+	}
+
+
 
 }
