@@ -184,5 +184,78 @@ public class DataManager {
 		}	
 	}
 
+	public Organization updateAccount(Organization org, String name, String description) {
+		
+		if (this.client == null) {
+			throw new IllegalStateException("WebClient is null.");
+		}
+		
+		if (org == null || name == null || description == null || org.getId() == null) {
+			throw new IllegalArgumentException("Illegal arguments passed.");
+		}
+		
+		
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("orgId", org.getId());
+			map.put("name", name);
+			map.put("description", description);
+			String response = client.makeRequest("/updateOrg", map);
+			//System.out.println(response);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error");
+			} else {
+				org.setName(name);
+				org.setDescription(description);
+			}
+			
+		} catch (Exception e) {
+			throw new IllegalStateException("Web client returns error"); 
+		}	
+		
+		return org; 
+		
+	}
+	
+	public String updatePassword(String orgId, String password) {
+		
+		if (this.client == null) {
+			throw new IllegalStateException("WebClient is null.");
+		}
+		
+		if (password == null || orgId == null) {
+			throw new IllegalArgumentException("Illegal arguments passed.");
+		}
+		
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("orgId", orgId);
+			map.put("password", password);
+			String response = client.makeRequest("/updateOrgPassword", map);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error");
+			} 
+			
+			return password;
+	
+		} catch (Exception e) {
+			
+			throw new IllegalStateException("Web client returns error"); 
+			
+		}	 
+		
+		
+	}
+
 
 }
