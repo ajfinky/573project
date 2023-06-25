@@ -15,7 +15,7 @@ public class UserInterface {
 		this.org = org;
 	}
 	
-	public void start() {
+	public void start(String currentPassword) {
 		
 		// initialize map variable
 		Map<String, String> idMap = new HashMap<String, String>();	
@@ -46,6 +46,12 @@ public class UserInterface {
 			// 2.9 : Add in option to display all fund information
 			System.out.println("Enter -2 to display donations for all funds in this organization");
 			
+			// 3.3 : Add in option to edit account information
+			System.out.println("Enter -3 to edit this organization’s account information");
+			
+			// 3.2 : Add in option to change password
+			System.out.println("Enter -4 to edit this organization’s password");
+			
 			int option = in.nextInt();
 			in.nextLine();
 			if (option == 0) {
@@ -72,7 +78,7 @@ public class UserInterface {
 						}
 						else {
 							UserInterface ui = new UserInterface(ds, org);
-							ui.start();
+							ui.start(password);
 						}
 					}
 					catch (Exception e) {
@@ -89,6 +95,52 @@ public class UserInterface {
 				for (Donation d : donationList) {
 					System.out.println("* : $" + d.getAmount() + " on " + d.getDate() + " for " + idMap.get(d.getFundId()));
 				}
+				
+			// 3.3 : option to change account information
+			} else if (option == -3) {
+				System.out.println("Enter your password:");
+				String passwordEntered = in.next();
+				in.nextLine();
+				
+				// check if password ok
+				if (passwordEntered.equals(currentPassword)) {
+					System.out.println("Sucess!");
+
+						try {
+							updateAccountInfo();
+						} catch (Exception e) {
+							System.out.println("An error occurred.");
+						}
+					
+				} else {
+					System.out.println("Login failed. Going back to main menu.");
+				}	
+			
+			// 3.2 : option to change password
+			} else if (option == -4) {
+				System.out.println("Enter your password:");
+				String passwordEntered = in.next();
+				in.nextLine();
+				
+				if (passwordEntered.equals(currentPassword)) {
+	
+					System.out.println("Current password entered successfully.");
+					
+					try {
+						String newPassword = updatePassword(currentPassword);
+						currentPassword = newPassword;
+						
+					} catch (Exception e) {
+						System.out.println("An error occurred.");
+					}
+					
+					
+				} else {
+					
+					System.out.println("Login failed. Going back to main menu.");
+					
+				}
+				
 			}
 			else {
 				displayFund(option);
@@ -97,7 +149,94 @@ public class UserInterface {
 			
 	}
 	
-	public void createFund() {
+	public String updatePassword(String currentPassword) { 
+		
+		while (true) {
+			System.out.println("Enter your new password: ");
+			String newPassword = in.next();
+			in.nextLine();
+			
+			System.out.println("Enter your new password again: "); 
+			String newPasswordRepeat = in.next();
+			in.nextLine();
+			
+			if (!newPassword.equals(newPasswordRepeat)) {
+				System.out.println("Passwords do not match. Going back to main menu.");
+				return currentPassword;
+				
+			} else {
+				
+				try {
+					String newPasswordFinal = dataManager.updatePassword(org.getId(), newPassword);
+					System.out.println("Password changed!");
+					return newPasswordFinal;
+				} catch (Exception e) {
+					System.out.println("There's been an error, try again.");
+				}
+			
+			}
+			
+		}
+		
+	}
+	
+	public void updateAccountInfo() {
+		
+		while (true) {
+			
+			boolean updateAccount = false;
+			String name = org.getName();
+			String description = org.getDescription();
+			
+			System.out.println("Your organization's current name is: " + org.getName());
+			System.out.println("Would you like to change the name? (y/n)");
+			String wantsToChangeName = in.next();
+			in.nextLine();
+			
+			if (wantsToChangeName.toLowerCase().equals("y")) {
+				System.out.println("Enter organization's new name: ");
+				String newName = in.nextLine();
+				in.nextLine();
+				
+				if (!newName.equals(name)) {
+					updateAccount = true;
+					name = newName;
+				}
+			}
+			
+			System.out.println("Your organization's current description is: " + org.getDescription());
+			System.out.println("Would you like to change the description? (y/n)");
+			String wantsToChangeDescription = in.next();
+			in.nextLine();
+			
+			if (wantsToChangeDescription.toLowerCase().equals("y")) {
+				System.out.println("Enter organization's new description: ");
+				String newDescription = in.nextLine();
+				in.nextLine();
+				
+				if (!newDescription.equals(description)) {
+					updateAccount = true;
+					description = newDescription;
+				}
+			}
+			
+			if (updateAccount) { 
+				try {
+					this.org = dataManager.updateAccount(org, name, description);
+					System.out.println("Successfully edited organization's info.");
+					break;
+				} catch (Exception e){
+					System.out.println("There's been an error, try again.");
+				}
+			} else {
+				System.out.println("Returning to main menu.");
+				break;
+			}
+			
+		}
+	}
+	
+	public void createFund() { 
 		
 		while(true) {
 			System.out.print("Enter the fund name: ");
@@ -189,7 +328,7 @@ public class UserInterface {
 			}
 			else {
 				UserInterface ui = new UserInterface(ds, org);
-				ui.start();
+				ui.start(password);
 			}
 		}
 		catch (Exception e) {
