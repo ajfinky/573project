@@ -21,11 +21,11 @@ app.use('/findOrgByLogin', (req, res) => {
 		    res.json({ "status": "error", "data" : err});
 		}
 		else if (result){
-		    res.json({ "status": "login exists" });
+		    res.json({ "status": "success" });
 		}
 		else {
 		    //console.log(result);
-		    res.json({ "status" : "success"});
+		    res.json({ "status" : "failure"});
 		}
 	    });
     });
@@ -118,7 +118,6 @@ app.use('/findOrgByLoginAndPassword', (req, res) => {
 		    res.json({ "status": "login failed" });
 		}
 		else {
-		    //console.log(result);
 		    res.json({ "status" : "success", "data" : result});
 		}
 	    });

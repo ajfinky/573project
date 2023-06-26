@@ -54,7 +54,7 @@ public class DataManager_checkOrgExistsTest {
 			}
 			
 		});
-    	assertTrue(dm.checkOrgExists(login));
+    	assertFalse(dm.checkOrgExists(login));
     }
     
     @Test
@@ -72,7 +72,7 @@ public class DataManager_checkOrgExistsTest {
 			}
 			
 		});
-    	assertFalse(dm.checkOrgExists(login));
+    	assertTrue(dm.checkOrgExists(login));
     }
 
 

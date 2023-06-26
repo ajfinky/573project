@@ -49,12 +49,12 @@ public Organization attemptLogin(String login, String password) {
 				String fundId = (String)data.get("_id");
 				String name = (String)data.get("name");
 				String description = (String)data.get("description"); 
-				Organization org = new Organization(fundId, name, description);  
+				Organization org = new Organization(fundId, name, description);
 
 				JSONArray funds = (JSONArray)data.get("funds");
 				Iterator it = funds.iterator();
 				while(it.hasNext()){
-					JSONObject fund = (JSONObject) it.next(); 
+					JSONObject fund = (JSONObject) it.next();
 					fundId = (String)fund.get("_id");
 					name = (String)fund.get("name");
 					description = (String)fund.get("description");
@@ -285,9 +285,8 @@ public Organization attemptLogin(String login, String password) {
 			}
 			
 			if (status.equals("success")) {
-				stat =  true;
+				stat = true;
 			}
-			System.out.println(status);
 			return stat;
 		} catch (Exception e) {
 			throw new IllegalStateException("Web client returns error from parsing response"); 
@@ -295,7 +294,7 @@ public Organization attemptLogin(String login, String password) {
 	}
 	
 	/**
-	 * Creates organization with passed user unput.
+	 * Creates organization with passed user input.
 	 * This method uses the /createOrg endpoint in the API.
 	 * @return the true on success; false if no organization is found
 	 */
@@ -309,7 +308,7 @@ public Organization attemptLogin(String login, String password) {
 			throw new IllegalArgumentException("Illegal arguments passed.");
 		}
 		
-		if (checkOrgExists(login) == false) {
+		if (checkOrgExists(login)) {
 			throw new IllegalArgumentException("The login is already used for an organization.");
 		}
     

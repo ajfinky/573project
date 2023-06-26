@@ -98,7 +98,11 @@ public class DataManager_attemptLogin_Test {
 			
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
-				return "{\"status\":\"success\",\"data\":{\"_id\":\"12345\",\"name\":\"new org\",\"description\":\"this is the new org\",\"org\":\"5678\",\"funds\":[{\"_id\":\"11111\",\"name\":\"new fund\",\"description\":\"this is the new fund\",\"target\":10000, \"donations\":[{\"contributor\":\"12345\",\"amount\":100,\"date\":\"2021-06-18T04:21:04.807Z\"}]}]}}";
+				if (resource.equals("/findOrgByLoginAndPassword")) {
+					return "{\"status\":\"success\",\"data\":{\"_id\":\"12345\",\"name\":\"new org\",\"description\":\"this is the new org\",\"org\":\"5678\",\"funds\":[{\"_id\":\"11111\",\"name\":\"new fund\",\"description\":\"this is the new fund\",\"target\":10000, \"donations\":[{\"contributor\":\"12345\",\"amount\":100,\"date\":\"2021-06-18T04:21:04.807Z\"}]}]}}";
+				} else {
+					return "{\"status\":\"success\",\"data\":\"Grace\"}";
+				}
 			}
 		});
 		

@@ -119,14 +119,10 @@ public class DataManager_makeDonation_Test {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"failure\",\"data\":\"Bill Joe\"}";
+                if (resource.equals("/makeDonation")) return "{\"status\":\"failure\",\"data\":\"Bill Joe\"}";
+                else return "{\"status\":\"success\",\"data\":\"Bill Joe\"}";
             }
-        }) {
-            @Override
-            public String getContributorName(String id) {
-                return "Bill Joe";
-            }
-        };
+        });
         dm.makeDonation("123", "001", "100");
     }
 }
