@@ -284,9 +284,10 @@ public Organization attemptLogin(String login, String password) {
 				throw new IllegalStateException("Web client returns error from bad input");
 			}
 			
-			if (status.equals("login failed")) {
+			if (status.equals("success")) {
 				stat =  true;
 			}
+			System.out.println(status);
 			return stat;
 		} catch (Exception e) {
 			throw new IllegalStateException("Web client returns error from parsing response"); 
