@@ -1,18 +1,11 @@
 package edu.upenn.cis573.project;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-import org.json.JSONObject;
-
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 
 public class WebClient {
@@ -68,12 +61,11 @@ public class WebClient {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 return response;
-            }
-            );
+            });
 
             return future.get();
-
         }
         catch (Exception e) {
             // uh oh

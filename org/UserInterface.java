@@ -105,7 +105,7 @@ public class UserInterface {
 				
 				// check if password ok
 				if (passwordEntered.equals(currentPassword)) {
-					System.out.println("Sucess!");
+					System.out.println("Success!");
 
 						try {
 							updateAccountInfo();
@@ -345,28 +345,139 @@ public class UserInterface {
 		}
 	}
 	
+	/**
+	 * Creates restarts the program to allow for the creation of a new organization.
+	 */
+	public static void restart() {
+		Scanner in = new Scanner(System.in);
+		
+		while (true) {
+			System.out.println("Enter 1 to submit login information for a previously-created organization");
+			System.out.println("Enter 2 to create a new organization");
+			
+			try {
+				int option = in.nextInt();
+				in.nextLine();
+				
+				if (option == 1) {
+					System.out.println("Enter username:");
+					String username = in.next();
+					in.nextLine();
+					
+					System.out.println("Enter password:");
+					String password = in.next();
+					in.nextLine();
+					
+					DataManager ds = new DataManager(new WebClient("localhost", 3001));
+					
+					try {
+						Organization org = ds.attemptLogin(username, password);
+
+						if (org == null) {
+							System.out.println("Login failed.");
+							continue;
+						}
+						else {
+							UserInterface ui = new UserInterface(ds, org);
+							ui.start(password);
+						}
+					}
+					catch (Exception e) {
+						System.out.println("Error in communicating with the server.");
+					}
+					
+				} else if (option == 2) {
+					
+					while (true) {
+						System.out.println("Enter username login:");
+						String login = in.next();
+						
+						System.out.println("Enter password:");
+						String password = in.next();
+						
+						System.out.println("Enter name of organization:");
+						String name = in.next();
+						
+						System.out.println("Enter description of organization:");
+						String description = in.next();
+						
+						DataManager ds = new DataManager(new WebClient("localhost", 3001));
+						
+						try {
+							boolean status = ds.createOrg(login, password, name, description);
+							if (status == true) {
+								
+								try {
+									Organization org = ds.attemptLogin(login, password);
+
+									if (org == null) {
+										System.out.println("Login failed.");
+										continue;
+									}
+									else {
+										UserInterface ui = new UserInterface(ds, org);
+										ui.start(password);
+									}
+								}
+								
+								catch (Exception e) {
+									System.out.println("Error in communicating with the server.");
+								}
+								
+							} else {
+								System.out.println("Organization creation failed. Enter information again:");
+								continue;
+							}
+							
+						} catch (Exception e) {
+							System.out.println(e.getMessage());
+						}
+			
+					}
+					
+				} else {
+					continue;
+				}
+			} catch (Exception e) {
+				System.out.println("Input not readable");
+				in.next();
+			}
+		}
+	}
+	
 	
 	public static void main(String[] args) {
 		
 		DataManager ds = new DataManager(new WebClient("localhost", 3001));
 		
-		String login = args[0];
-		String password = args[1];
-		
 		try {
-			Organization org = ds.attemptLogin(login, password);
+			String login = args[0];
+			String password = args[1];
+			
+			try {
+				Organization org = ds.attemptLogin(login, password);
+				if (org == null) {
+					// old way 
+					System.out.println("Login failed with incorrect information.");
+					
+					restart();
+				}
+				else {
+					UserInterface ui = new UserInterface(ds, org);
+					ui.start(password);
+				}
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			
+		} catch (Exception e) {
+			System.out.println("No login information provided.");
+			
+			restart();
+		}
+		
 
-			if (org == null) {
-				System.out.println("Login failed.");
-			}
-			else {
-				UserInterface ui = new UserInterface(ds, org);
-				ui.start(password);
-			}
-		}
-		catch (Exception e) {
-			System.out.println("Error in communicating with the server.");
-		}
 	}
 
 }

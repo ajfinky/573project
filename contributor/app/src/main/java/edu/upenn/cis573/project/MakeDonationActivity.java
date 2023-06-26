@@ -1,7 +1,5 @@
 package edu.upenn.cis573.project;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +30,7 @@ public class MakeDonationActivity extends AppCompatActivity {
 
         final List<Organization> orgs = dataManager.getAllOrganizations();
         selectedOrg = orgs.get(0);
-        if (selectedOrg.getFunds().isEmpty() == false) {
+        if (!selectedOrg.getFunds().isEmpty()) {
             selectedFund = selectedOrg.getFunds().get(0);
         }
         else {
@@ -61,7 +58,7 @@ public class MakeDonationActivity extends AppCompatActivity {
                 Log.v("spinner", "Selected org: " + selectedOrg.getName() + "; num funds = " + selectedOrg.getFunds().size());
 
                 List<String> fundNames = new LinkedList<>();
-                if (selectedOrg.getFunds().isEmpty() == false) {
+                if (!selectedOrg.getFunds().isEmpty()) {
                     for (Fund fund : selectedOrg.getFunds()) {
                         fundNames.add(fund.getName());
                     }
@@ -70,7 +67,7 @@ public class MakeDonationActivity extends AppCompatActivity {
                     fundNames.add("This Organization has no Funds.");
                 }
 
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, fundNames);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, fundNames);
 
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -90,7 +87,7 @@ public class MakeDonationActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedFundName = (String)adapterView.getItemAtPosition(i);
 
-                if (selectedOrg.getFunds().isEmpty() == false) {
+                if (!selectedOrg.getFunds().isEmpty()) {
                     for (Fund f : selectedOrg.getFunds()) {
                         if (f.getName().equals(selectedFundName)) {
                             selectedFund = f;
@@ -118,7 +115,7 @@ public class MakeDonationActivity extends AppCompatActivity {
             orgNames.add(org.getName());
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, orgNames);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, orgNames);
 
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -143,36 +140,22 @@ public class MakeDonationActivity extends AppCompatActivity {
         String contributorId = contributor.getId();
 
         Log.v("makeDonation", orgId + " " + fundId + " " + amount + " " + contributorId);
+        try {
+            dataManager.makeDonation(contributorId, fundId, amount);
 
-        boolean success = dataManager.makeDonation(contributorId, fundId, amount);
-
-        if (success) {
             Toast.makeText(this, "Thank you for your donation!", Toast.LENGTH_LONG).show();
             contributor.getDonations().add(new Donation(selectedFund.getName(), contributor.getName(), Long.parseLong(amount), new Date().toString()));
 
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute( () -> {
-                        try { Thread.sleep(3000); } catch (Exception e) { }
-                        finish();
-                    });
-            /*
-            // this approach is no longer supported
-            new AsyncTask<String, String, String>() {
+                try { Thread.sleep(3000); } catch (Exception e) { }
+                finish();
+            });
 
-                protected String doInBackground(String... inputs) {
-                    try { Thread.sleep(3000); }
-                    catch (Exception e) { }
-                    return null;
-                }
-
-                protected void onPostExecute(String input) {
-                    finish();
-                }
-            }.execute();
-            */
-
-        }
-        else {
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(this, "Amount cannot be empty and must be a numeric number",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
             Toast.makeText(this, "Sorry, something went wrong!", Toast.LENGTH_LONG).show();
         }
     }
