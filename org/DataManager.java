@@ -86,7 +86,6 @@ public class DataManager {
 			else return null;
 		}
 		catch (Exception e) {
-			//e.printStackTrace();
 			throw new IllegalStateException("Error during login attempt.");
 		}
 	}
@@ -101,7 +100,7 @@ public class DataManager {
 		if (this.client == null) {
 			throw new IllegalStateException("WebClient is null.");
 		}
-		
+
 		if (id == null) {
 			throw new IllegalArgumentException("Illegal arguments passed.");
 		}
@@ -134,7 +133,7 @@ public class DataManager {
 
 		}
 		catch (Exception e) {
-				throw new IllegalStateException("Web client returns error"); 
+			throw new IllegalStateException("Web client returns error");
 		}	
 	}
 
@@ -143,7 +142,7 @@ public class DataManager {
 	 * @return a new Fund object if successful; null if unsuccessful
 	 */
 	public Fund createFund(String orgId, String name, String description, long target) {
-		
+
 		if (this.client == null) {
 			throw new IllegalStateException("WebClient is null.");
 		}
@@ -153,7 +152,6 @@ public class DataManager {
 		}
 
 		try {
-
 			Map<String, Object> map = new HashMap<>();
 			map.put("orgId", orgId);
 			map.put("name", name);
@@ -174,13 +172,12 @@ public class DataManager {
 			if (status.equals("error")) {
 				throw new IllegalStateException("Web client returns error"); 
 			}
-			
+
 			else return null;
 
 		}
 		catch (Exception e) {
-			//e.printStackTrace(); 
-			throw new IllegalStateException("Web client returns error"); 
+			throw new IllegalStateException("Web client returns error");
 		}	
 	}
 
@@ -280,7 +277,7 @@ public class DataManager {
 		}
 
 		try {
-			double a = Double.parseDouble(amount);
+			long a = Long.parseLong(amount);
 			if (a < 0.0) throw new NumberFormatException();
 
 			Map<String, Object> map = new HashMap<>();
