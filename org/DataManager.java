@@ -119,7 +119,7 @@ public class DataManager {
 			String status = (String)json.get("status");
 
 			if (status.equals("success")) {
-				String name = (String)json.get("name");
+				String name = (String)json.get("data");
 				names.put(id, name);
 				return name;
 			}
@@ -285,7 +285,6 @@ public class DataManager {
 			map.put("fund", fundId);
 			map.put("amount", amount);
 			String response = client.makeRequest("/makeDonation", map);
-
 
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);

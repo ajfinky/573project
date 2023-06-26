@@ -322,8 +322,6 @@ public class UserInterface {
 				System.out.println("Please make a valid selection.");
 			}
 		}
-
-		in.nextLine();
 	}
 
 	public void makeDonation(int fundNumber) {
@@ -336,9 +334,9 @@ public class UserInterface {
 				System.out.print("Enter the donation amount: ");
 				String amount = in.nextLine().trim();
 
-				if (dataManager.makeDonation(contributorId, Integer.toString(fundNumber), amount)) {
+				if (dataManager.makeDonation(contributorId, org.getFunds().get(fundNumber - 1).getId(), amount)) {
 					Donation d = new Donation(
-							Integer.toString(fundNumber),
+							org.getFunds().get(fundNumber - 1).getId(),
 							dataManager.getContributorName(contributorId),
 							Long.parseLong(amount),
 							Instant.now().toString()
