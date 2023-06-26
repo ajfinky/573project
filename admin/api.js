@@ -477,7 +477,7 @@ app.use('/allOrgs', (req, res) => {
 		    var organizations = [];
 
 		    result.forEach( (org) => {
-			    
+
 			    var funds = [];
 
 			    org.funds.forEach( (fund) => {

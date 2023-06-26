@@ -1,4 +1,5 @@
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -85,7 +86,6 @@ public Organization attemptLogin(String login, String password) {
 
 		}
 		catch (Exception e) {
-			//e.printStackTrace();
 			throw new IllegalStateException("Error during login attempt.");
 		}
 	}
@@ -101,7 +101,7 @@ public Organization attemptLogin(String login, String password) {
 		if (this.client == null) {
 			throw new IllegalStateException("WebClient is null.");
 		}
-		
+
 		if (id == null) {
 			throw new IllegalArgumentException("Illegal arguments passed.");
 		}
@@ -120,7 +120,7 @@ public Organization attemptLogin(String login, String password) {
 			String status = (String)json.get("status");
 
 			if (status.equals("success")) {
-				String name = (String)json.get("name");
+				String name = (String)json.get("data");
 				names.put(id, name);
 				return name;
 			}
@@ -134,7 +134,7 @@ public Organization attemptLogin(String login, String password) {
 
 		}
 		catch (Exception e) {
-				throw new IllegalStateException("Web client returns error"); 
+			throw new IllegalStateException("Web client returns error");
 		}	
 	}
 
@@ -143,7 +143,7 @@ public Organization attemptLogin(String login, String password) {
 	 * @return a new Fund object if successful; null if unsuccessful
 	 */
 	public Fund createFund(String orgId, String name, String description, long target) {
-		
+
 		if (this.client == null) {
 			throw new IllegalStateException("WebClient is null.");
 		}
@@ -153,7 +153,6 @@ public Organization attemptLogin(String login, String password) {
 		}
 
 		try {
-
 			Map<String, Object> map = new HashMap<>();
 			map.put("orgId", orgId);
 			map.put("name", name);
@@ -174,13 +173,12 @@ public Organization attemptLogin(String login, String password) {
 			if (status.equals("error")) {
 				throw new IllegalStateException("Web client returns error"); 
 			}
-			
+
 			else return null;
 
 		}
 		catch (Exception e) {
-			//e.printStackTrace(); 
-			throw new IllegalStateException("Web client returns error"); 
+			throw new IllegalStateException("Web client returns error");
 		}	
 	}
 	
@@ -251,10 +249,10 @@ public Organization attemptLogin(String login, String password) {
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
-			
+
 			if (status.equals("error")) {
 				throw new IllegalStateException("Web client returns error");
-			} 
+			}
 			
 			return password;
 	
@@ -313,7 +311,7 @@ public Organization attemptLogin(String login, String password) {
 		if (checkOrgExists(login) == false) {
 			throw new IllegalArgumentException("The login is already used for an organization.");
 		}
-
+    
 		try {
 			Map<String, Object> map = new HashMap<>();
 			map.put("login", login);
@@ -340,6 +338,55 @@ public Organization attemptLogin(String login, String password) {
 		}	 
 		
 	}
-	
+  
+  /**
+	 * Make a donation to the specified fund for the specified amount.
+	 * This method uses the /makeDonation endpoint in the API
+	 * @return true if successful, false otherwise
+	 */
+	public Donation makeDonation(String contributorId, String fundId, String amount) {
+		if (client == null) {
+			throw new IllegalStateException("WebClient should not be null");
+		}
+
+		if (contributorId == null || fundId == null || amount == null) {
+			throw new IllegalArgumentException("ContributorId/FundId/Amount should not be null");
+		}
+
+		if (contributorId.length() == 0 || fundId.length() == 0 || amount.length() == 0) {
+			throw new IllegalArgumentException("ContributorId/FundId/Amount should not be empty");
+		}
+
+		String name = getContributorName(contributorId);
+		if (name == null) {
+			throw new IllegalArgumentException("ContributorId is invalid.");
+		}
+
+		try {
+			long a = Long.parseLong(amount);
+			if (a < 0.0) throw new NumberFormatException();
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("contributor", contributorId);
+			map.put("fund", fundId);
+			map.put("amount", amount);
+			String response = client.makeRequest("/makeDonation", map);
+
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String) json.get("status");
+
+			if (!status.equals("success")) {
+				throw new IllegalStateException();
+			}
+
+			return new Donation(fundId, name, a, Instant.now().toString());
+
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("Amount must be numeric and non-negative");
+		} catch (Exception e) {
+			throw new IllegalStateException("An unexpected error occurred during making a donation");
+		}
+	}
 
 }

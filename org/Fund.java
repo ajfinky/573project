@@ -9,6 +9,7 @@ public class Fund {
 	private List<Donation> donations;
 	private String[] contributorArr = new String[0];
 	private final Map<String, List<Long>> contributorMap = new HashMap<>();
+	private int numDonations = 0;
 	
 	public Fund(String id, String name, String description, long target) {
 		this.id = id;
@@ -35,8 +36,10 @@ public class Fund {
 	}
 
 	public void setDonations(List<Donation> donations) {
+		if (donations.size() == numDonations) return;
 		this.donations = donations;
 		Set<String> contributorSet = new HashSet<>();
+		contributorMap.clear();
 		for (Donation d : donations) {
 			String name = d.getContributorName();
 			contributorSet.add(name);
@@ -56,9 +59,11 @@ public class Fund {
 				contributorArr,
 				(s, t1) -> Long.compare(contributorMap.get(t1).get(1), contributorMap.get(s).get(1))
 		);
+		numDonations = donations.size();
 	}
 	
 	public List<Donation> getDonations() {
+		setDonations(donations);
 		return donations;
 	}
 	

@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.time.Instant;
 
 public class UserInterface {
 	
@@ -279,14 +280,14 @@ public class UserInterface {
 		// create variable to store donation percentage
 
 		// print individual contributions
-		System.out.println("\n\n");
+		System.out.println();
 		System.out.println("Donations:");
 		for (Donation donation : donations) {
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
 		}
 
 		// print aggregate contributions
-		System.out.println("\n\n");
+		System.out.println();
 		System.out.println("Aggregated Donations:");
 		String[] contributorArr = fund.getSortedContributors();
 		Map<String, List<Long>> contributorMap = fund.getContributorTotals();
@@ -295,21 +296,53 @@ public class UserInterface {
 			System.out.println(s + ", " + stats.get(0) + " donations, $" + stats.get(1) + " total.");
 		}
 
-		
 		// Print sum of donations
+		System.out.println();
 		if (fund.getTarget() > 0) {
 			System.out.println("Sum of Donations: $" + fund.totalDonationQuantity() + " (" + fund.percentageOfGoal(fund.totalDonationQuantity()) + 
 					"% of Goal)");
 		} else {
 			System.out.println("Sum of Donations: $" + fund.totalDonationQuantity() + " (Target is not set or valid)");
 		}
-		
-		
-				
-		System.out.println("Press the Enter key to go back to the listing of funds");
-		in.nextLine();
-		
-		
+
+		boolean isOver = false;
+		while (!isOver) {
+			System.out.println();
+			// make donation on behalf of contributor
+			System.out.println("Enter -1 to make a donation to this fund on behalf of a contributor");
+			// go back to previous page
+			System.out.println("Enter -2 to go back to the listing of funds");
+			String option = in.nextLine().trim();
+			if (option.equals("-1")) {
+				makeDonation(fundNumber);
+				isOver = true;
+			} else if (option.equals("-2")) {
+				isOver = true;
+			} else {
+				System.out.println("Please make a valid selection.");
+			}
+		}
+	}
+
+	public void makeDonation(int fundNumber) {
+		System.out.println();
+		while(true) {
+			try {
+				System.out.print("Enter the contributor id: ");
+				String contributorId = in.nextLine().trim();
+
+				System.out.print("Enter the donation amount: ");
+				String amount = in.nextLine().trim();
+
+				Donation d = dataManager.makeDonation(contributorId, org.getFunds().get(fundNumber - 1).getId(), amount);
+				List<Donation> donations = org.getFunds().get(fundNumber - 1).getDonations();
+				donations.add(d);
+				break;
+			} catch (Exception e) {
+				System.out.println("Error. Please enter values again.");
+				System.out.println();
+			}
+		}
 	}
 	
 	/**
