@@ -1,0 +1,37 @@
+﻿1. The tasks that you would like graded for this phase. Please keep in mind that we will only grade four tasks for a group of three, and five tasks for a group of four. If you list more than that, the tasks that get graded will be decided at the grader’s discretion.
+   1. 3.2, 3.3
+2. For each task you completed in this phase, a brief description of the changes you made to the provided code, e.g. the names of any classes or methods that were changed, new methods that were created, etc.
+   1. Task 3.1
+      1. Added /createOrg endpoint in api.js
+      2. Added / findOrgByLogin endpoint in api.js
+      3. Created new method DataManager.createOrg()
+      4. Created new method DataManager.checkOrgExists()
+      5. Edited UserInterface.start() to implement functionality
+      6. Added static method UserInterface.restart() to accommodate new changes
+      7. Created JUnit file DataManager_createOrg_Test and DataManager_checkOrgExistsTest and wrote tests for 100% statement coverage and to check defensive programming.
+   2. Task 3.2
+      1. Added /updateOrgPassword endpoint in api.js
+      2. Created new method DataManager.updatePassword()
+      3. Created new method UserInterface.updatePassword() as well as edited the UserInterface.start() method to handle password changing functionality.
+      4. Created JUnit test file DataManager_updatePassword_Test and wrote tests for 100% statement coverage and to check defensive programming.
+   3. Task 3.3
+      1. Added /updateOrg endpoint in api.js
+      2. Created new method DataManager.updateAccount()
+      3. Created new method UserInterface.updateAccountInfo() as well as edited the UserInterface.start() method to handle account info changing functionality.
+      4. Created JUnit test file DataManager_updateAccount_Test and wrote tests for 100% statement coverage and to check defensive programming.
+   4. Tasl 3.4
+      1. Added a makeDonation method in the Organization DataManager Class, which allows the user to make a donation to a fund on the behalf of a contributor.
+      2. Added a makeDonation method in the Organization UserInterface Class, which gives the user the option to make a donation to a fund on the behalf of a contributor.
+      3. Created a test file called DataManager_makeDonation_Test and wrote tests for 100% statement coverage and to check defensive programming.
+   5. Task 3.5
+      1. Added an attemptSignUp function in the Contributor DataManager Class, which allows the user to register a new contributor account.
+      2. Design a new UI page for sign up: activity_signup, which will be shown when the user clicks on the sign up button in the log in page. 
+      3. Added a new class called SignUpActivity which extends AppCompatActivity which will check user’s input as well as calls the DataManager.attemptSignUp function to create a new contributor account.
+      4. Created a JUnit class called DataManagerAttemptSignUpTest to test the attemptSignUp functionality.
+3. Any known bugs or other issues with the tasks you attempted in this phase.
+4. Instructions on how to start each app, if you changed anything from the original version of the code, e.g. the name of the Java main class or JavaScript entry point, arguments to the programs, etc. If you did not change anything, you may omit this.
+5. A brief but specific description of each team member’s contributions, including the task numbers that they worked on. This will be incorporated into the grading!
+   1. Grace: Tasks 3.2, 3.3
+   2. Travis: Task 3.5
+   3. Aaron: Task 3.1
+   4. John-Wes: Task 3.4
