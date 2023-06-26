@@ -334,16 +334,9 @@ public class UserInterface {
 				System.out.print("Enter the donation amount: ");
 				String amount = in.nextLine().trim();
 
-				if (dataManager.makeDonation(contributorId, org.getFunds().get(fundNumber - 1).getId(), amount)) {
-					Donation d = new Donation(
-							org.getFunds().get(fundNumber - 1).getId(),
-							dataManager.getContributorName(contributorId),
-							Long.parseLong(amount),
-							Instant.now().toString()
-							);
-					List<Donation> donations = org.getFunds().get(fundNumber - 1).getDonations();
-					donations.add(d);
-				}
+				Donation d = dataManager.makeDonation(contributorId, org.getFunds().get(fundNumber - 1).getId(), amount);
+				List<Donation> donations = org.getFunds().get(fundNumber - 1).getDonations();
+				donations.add(d);
 				break;
 			} catch (Exception e) {
 				System.out.println("Error. Please enter values again.");

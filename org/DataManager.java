@@ -1,4 +1,5 @@
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -238,10 +239,10 @@ public class DataManager {
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
-			
+
 			if (status.equals("error")) {
 				throw new IllegalStateException("Web client returns error");
-			} 
+			}
 			
 			return password;
 	
@@ -259,7 +260,7 @@ public class DataManager {
 	 * This method uses the /makeDonation endpoint in the API
 	 * @return true if successful, false otherwise
 	 */
-	public boolean makeDonation(String contributorId, String fundId, String amount) {
+	public Donation makeDonation(String contributorId, String fundId, String amount) {
 		if (client == null) {
 			throw new IllegalStateException("WebClient should not be null");
 		}
@@ -272,7 +273,8 @@ public class DataManager {
 			throw new IllegalArgumentException("ContributorId/FundId/Amount should not be empty");
 		}
 
-		if (getContributorName(contributorId) == null) {
+		String name = getContributorName(contributorId);
+		if (name == null) {
 			throw new IllegalArgumentException("ContributorId is invalid.");
 		}
 
@@ -294,7 +296,7 @@ public class DataManager {
 				throw new IllegalStateException();
 			}
 
-			return true;
+			return new Donation(fundId, name, a, Instant.now().toString());
 
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException("Amount must be numeric and non-negative");
