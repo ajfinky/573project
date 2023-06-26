@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,7 +25,7 @@ public class DataManager {
 	 * This method uses the /findOrgByLoginAndPassword endpoint in the API
 	 * @return an Organization object if successful; null if unsuccessful
 	 */
-	public Organization attemptLogin(String login, String password) {
+public Organization attemptLogin(String login, String password) {
 		
 		if (login == null || password == null) {
 			throw new IllegalArgumentException("Argument is null.");
@@ -35,15 +36,12 @@ public class DataManager {
 			map.put("login", login);
 			map.put("password", password);
 			String response = client.makeRequest("/findOrgByLoginAndPassword", map);
-			
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
-			
 			if (status.equals("error")) {
 				throw new IllegalStateException("Web client returns error");
 			}
-
 
 			if (status.equals("success")) {
 				JSONObject data = (JSONObject)json.get("data");
@@ -84,12 +82,14 @@ public class DataManager {
 				return org;
 			}
 			else return null;
+
 		}
 		catch (Exception e) {
 			//e.printStackTrace();
 			throw new IllegalStateException("Error during login attempt.");
 		}
 	}
+
 
 	/**
 	 * Look up the name of the contributor with the specified ID.
@@ -183,7 +183,12 @@ public class DataManager {
 			throw new IllegalStateException("Web client returns error"); 
 		}	
 	}
-
+	
+	/**
+	 * Updates organization with new name and description.
+	 * This method uses the /updateOrg endpoint in the API.
+	 * @return the organization on success; null if no organization is found
+	 */
 	public Organization updateAccount(Organization org, String name, String description) {
 		
 		if (this.client == null) {
@@ -222,6 +227,11 @@ public class DataManager {
 		
 	}
 	
+	/**
+	 * Updates organization with new password.
+	 * This method uses the /updateOrgPassword endpoint in the API.
+	 * @return the password on success; null if no organization is found
+	 */
 	public String updatePassword(String orgId, String password) {
 		
 		if (this.client == null) {
@@ -256,6 +266,80 @@ public class DataManager {
 		
 		
 	}
+	
+	public boolean checkOrgExists(String login) {
+		
+		if (login == null) {
+			throw new IllegalArgumentException("Argument is null.");
+		}
+		
+		try {
+			boolean stat = false;
+			Map<String, Object> map = new HashMap<>();
+			map.put("login", login);
+			String response = client.makeRequest("/findOrgByLogin", map);
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error from bad input");
+			}
+			
+			if (status.equals("login failed")) {
+				stat =  true;
+			}
+			return stat;
+		} catch (Exception e) {
+			throw new IllegalStateException("Web client returns error from parsing response"); 
+		}
+	}
+	
+	/**
+	 * Creates organization with passed user unput.
+	 * This method uses the /createOrg endpoint in the API.
+	 * @return the true on success; false if no organization is found
+	 */
+	public boolean createOrg(String login, String password, String name, String description) {
+		
+		if (this.client == null) {
+			throw new IllegalStateException("WebClient is null.");
+		}
+		
+		if (password == null || login == null || name == null || description == null) {
+			throw new IllegalArgumentException("Illegal arguments passed.");
+		}
+		
+		if (checkOrgExists(login) == false) {
+			throw new IllegalArgumentException("The login is already used for an organization.");
+		}
 
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("login", login);
+			map.put("password", password);
+			map.put("name", name);
+			map.put("description", description);
+			String response = client.makeRequest("/createOrg", map);
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(response);
+			String status = (String)json.get("status");
+			
+			if (status.equals("error")) {
+				throw new IllegalStateException("Web client returns error");
+			} else if (status.equals("success")) {
+				return true;
+			} else {
+				return false;
+			}
+	
+		} catch (Exception e) {
+			
+			throw new IllegalStateException("Web client returns error"); 
+			
+		}	 
+		
+	}
+	
 
 }
