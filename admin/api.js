@@ -6,6 +6,54 @@ const {Fund} = require('./DbConfig.js');
 const {Contributor} = require('./DbConfig.js');
 const {Donation} = require('./DbConfig.js');
 
+/*
+3.1
+*/
+/*
+Return an org with login specified;
+*/
+app.use('/findOrgByLogin', (req, res) => {
+
+	var query = {"login" : req.query.login};
+    
+	Organization.findOne( query, (err, result) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else if (result){
+		    res.json({ "status": "login exists" });
+		}
+		else {
+		    //console.log(result);
+		    res.json({ "status" : "success"});
+		}
+	    });
+    });
+    
+ /*
+Handle the form submission to create a new organization
+*/
+app.use('/createOrg', (req, res) => {
+
+	var org = new Organization({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		description: req.query.description,
+		funds: []
+	    });
+
+	org.save( (err) => {
+		if (err) {
+			res.json({'status': 'error', 'data' : err});
+		}
+		else {
+			// console.log(contributor);
+			res.json({'status' : 'success', 'data' : org});
+		}
+		  });
+
+    });
 
 /*
 3.2 - Handle updating an org's password
