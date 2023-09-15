@@ -7,5 +7,5 @@ Created donation tracker for organizations and individuals. Enabled functionalit
 - MongoDB
 - Node Express
 
-## Setup Guide
+## Set-Up Guide
 https://docs.google.com/document/d/1qBnHUK-KVFo_m0YEXDjhqXODFHIWIzIwD3r6GpJznTs/edit
