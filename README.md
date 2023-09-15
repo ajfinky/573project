@@ -1,4 +1,4 @@
-### CIS 5730 Project
+# CIS 5730 Project
 ## Purpose
 Created donation tracker for organizations and individuals. Enabled functionality to create and view funds and donation history.
 
